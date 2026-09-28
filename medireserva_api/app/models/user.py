@@ -9,7 +9,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
     password_hash = Column(String, nullable=False)
-    rol = Column(String, nullable=False, default="patient")
+    role = Column(String, nullable=False, default="patient")
 
     # Relación con el doctor asociado al usuario (si existe)
     doctor = relationship(
