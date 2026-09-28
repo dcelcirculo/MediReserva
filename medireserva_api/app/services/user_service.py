@@ -28,7 +28,7 @@ def get_user_by_id( db: Session, user_id: int) -> User:
     return user
 
 # Eliminar usuario
-def delete_user(db: Session, user_id: int) -> None:
+def delete_user_by_id(db: Session, user_id: int) -> None:
     user = get_user_by_id(db, user_id)
     db.delete(user)
     db.commit()
