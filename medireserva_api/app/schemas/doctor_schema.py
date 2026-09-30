@@ -1,13 +1,13 @@
 from pydantic import BaseModel, ConfigDict
 
 class CreateDoctor(BaseModel):
-    specialty: str
+    specialty_id: int
     
 class DoctorResponse(BaseModel):
     id: int
-    specialty: str
+    specialty_id: int
 
     model_config = ConfigDict(from_attributes=True)
     
 class DoctorUpdate(BaseModel):
-    specialty: str
+    specialty_id: int

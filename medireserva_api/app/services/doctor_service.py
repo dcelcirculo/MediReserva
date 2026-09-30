@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.doctor import Doctor
-from app.schemas.doctor_schema import CreateDoctor
+from app.schemas.doctor_schema import CreateDoctor, DoctorUpdate
 from app.auth.security import hash_password
 
 # Crear un nuevo doctor
 def create_doctor(db: Session, datos: CreateDoctor, user_id: int) -> Doctor:
     new_doctor = Doctor(
         user_id=user_id,
-        specialty=datos.specialty
+        specialty_id=datos.specialty_id
     )
 
     db.add(new_doctor)
@@ -36,6 +36,9 @@ def delete_doctor_by_id(db: Session, doctor_id: int):
     return {"detail": "Doctor eliminado correctamente"}
 
 # Actualizar un doctor por su ID
-def update_doctor(db: Session, doctor_id: int, datos: CreateDoctor) -> Doctor:
+def update_doctor(db: Session, doctor_id: int, datos: DoctorUpdate) -> Doctor:
     doctor = get_doctor_by_id(db, doctor_id)
-    doctor.specialty = datos.specialty
+    doctor.specialty_id = datos.specialty_id
+    db.commit()
+    db.refresh(doctor)
+    return doctor

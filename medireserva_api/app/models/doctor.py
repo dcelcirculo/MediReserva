@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from app.config.database import Base
 
@@ -15,12 +15,22 @@ class Doctor(Base):
         unique=True, #Evitamos crear 2 perfiles medicos para el mismo usuario
         index=True # Creamos un índice para mejorar la búsqueda por user_id
     )
-    specialty = Column(String, nullable=False)
+    specialty_id = Column(
+        Integer,
+        ForeignKey("specialty.id"),
+        nullable=False,
+        index=True
+    )
     
     # Relación con el usuario al que pertenece el doctor
     user = relationship(
         "User",
         back_populates="doctor"
+    )
+
+    specialty = relationship(
+        "Specialty",
+        back_populates="doctors"
     )
     
     # Relación con las citas del doctor

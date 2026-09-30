@@ -14,6 +14,17 @@ router = APIRouter(prefix="/appointments", tags=["appointments"])
 def list_appointments(db: Session = Depends(get_db)):
     return appointment_service.get_all_appointments(db)
 
+# Obtener las citas del usuario autenticado
+@router.get("/my", response_model=list[AppointmentResponse])
+def get_my_appointments(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    return appointment_service.get_appointments_by_user(
+        db,
+        current_user.id
+    )
+
 # Obtener una cita por ID
 @router.get("/{appointment_id}", response_model=AppointmentResponse)
 def get_appointment(appointment_id: int, db: Session = Depends(get_db)):
