@@ -5,11 +5,17 @@ from app.schemas.doctor_schema import CreateDoctor
 from app.auth.security import hash_password
 
 # Crear un nuevo doctor
-def CreateDoctor(db: Session, doctor: CreateDoctor, user_id: int) -> Doctor:
+def create_doctor(db: Session, datos: CreateDoctor, user_id: int) -> Doctor:
     new_doctor = Doctor(
         user_id=user_id,
         specialty=datos.specialty
     )
+
+    db.add(new_doctor)
+    db.commit()
+    db.refresh(new_doctor)
+
+    return new_doctor
 
 # Listar todos los doctores
 def list_doctors(db: Session):
