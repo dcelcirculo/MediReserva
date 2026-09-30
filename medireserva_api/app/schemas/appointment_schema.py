@@ -1,5 +1,4 @@
 from datetime import date, time
-
 from pydantic import BaseModel, ConfigDict
 
 class CreateAppointment(BaseModel):
@@ -18,3 +17,10 @@ class AppointmentResponse(BaseModel):
     status: str
 
     model_config = ConfigDict(from_attributes=True)
+    
+class AppointmentUpdate(BaseModel):
+    doctor_id: int | None = None
+    schedule_id: int | None = None
+    appointment_date: date | None = None
+    appointment_time: time | None = None
+    status: str | None = None

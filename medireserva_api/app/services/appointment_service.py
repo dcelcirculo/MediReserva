@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.appointment import Appointment
-from app.schemas.appointment_schema import CreateAppointment
+from app.schemas.appointment_schema import CreateAppointment, AppointmentUpdate
 from app.auth.security import hash_password
 
 # Crear una nueva cita
@@ -63,14 +63,20 @@ def update_appointment_status(db: Session, appointment_id: int, new_status: str)
     return appointment
 
 # Actualizar los detalles de una cita
-def update_appointment_details(db: Session, appointment_id: int, datos: CreateAppointment) -> Appointment:
+def update_appointment(db: Session, appointment_id: int, datos: AppointmentUpdate) -> Appointment:
     appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
     if not appointment:
         raise HTTPException(status_code=404, detail="Cita no encontrada")
-    appointment.doctor_id = datos.doctor_id
-    appointment.schedule_id = datos.schedule_id
-    appointment.appointment_date = datos.appointment_date
-    appointment.appointment_time = datos.appointment_time
+    if datos.doctor_id is not None:
+        appointment.doctor_id = datos.doctor_id
+    if datos.schedule_id is not None:
+        appointment.schedule_id = datos.schedule_id
+    if datos.appointment_date is not None:
+        appointment.appointment_date = datos.appointment_date
+    if datos.appointment_time is not None:
+        appointment.appointment_time = datos.appointment_time
+    if datos.status is not None:
+        appointment.status = datos.status
     db.commit()
     db.refresh(appointment)
     return appointment

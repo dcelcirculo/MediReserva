@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.schedule import Schedule
-from app.schemas.schedule_schema import CreateSchedule
+from app.schemas.schedule_schema import CreateSchedule, ScheduleUpdate
 
 # Crear un nuevo horario
 def create_schedule(db: Session, datos: CreateSchedule) -> Schedule:
     new_schedule = Schedule(
         doctor_id=datos.doctor_id,
-        day_of_week=datos.day_of_week,
+        day=datos.day,
         start_time=datos.start_time,
         end_time=datos.end_time
     )
@@ -45,14 +45,18 @@ def delete_schedule(db: Session, schedule_id: int) -> None:
     return None
 
 # Actualizar los detalles de un horario
-def update_schedule_details(db: Session, schedule_id: int, datos: CreateSchedule) -> Schedule:
+def update_schedule_details(db: Session, schedule_id: int, datos: ScheduleUpdate) -> Schedule:
     schedule = db.query(Schedule).filter(Schedule.id == schedule_id).first()
     if not schedule:
         raise HTTPException(status_code=404, detail="Horario no encontrado")
-    schedule.doctor_id = datos.doctor_id
-    schedule.day_of_week = datos.day_of_week
-    schedule.start_time = datos.start_time
-    schedule.end_time = datos.end_time
+    if datos.doctor_id is not None:
+        schedule.doctor_id = datos.doctor_id
+    if datos.day is not None:
+        schedule.day = datos.day
+    if datos.start_time is not None:
+        schedule.start_time = datos.start_time
+    if datos.end_time is not None:
+        schedule.end_time = datos.end_time
     db.commit()
     db.refresh(schedule)
     return schedule

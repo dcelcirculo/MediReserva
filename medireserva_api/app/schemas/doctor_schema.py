@@ -8,3 +8,6 @@ class DoctorResponse(BaseModel):
     specialty: str
 
     model_config = ConfigDict(from_attributes=True)
+    
+class DoctorUpdate(BaseModel):
+    specialty: str
